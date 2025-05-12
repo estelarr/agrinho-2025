@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biotecnologia Verde: Conectando Campo e Cidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#4CAF50',
+                    }
+                }
+            }
+        }
+
+        // Dark mode detection and handling
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+    <style>
+        /* Variáveis CSS (root) para facilitar a manutenção de cores e tamanhos */
+        :root {
+            --primary-color: #5D5CDE;
+            --secondary-color: #4CAF50;
+            --text-color-light: #333333;
+            --text-color-dark: #f0f0f0;
+            --bg-color-light: #ffffff;
+            --bg-color-dark: #181818;
+            --accent-light: #e0e7ff;
+            --accent-dark: #312e81;
+            --font-size-base: 16px;
+            --font-size-heading: 24px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+        }
+
+        /* Animações para elementos visuais */
+        .plant-animation {
+            animation: grow 3s ease-out forwards;
+            transform-origin: bottom center;
+        }
+        
+        @keyframes grow {
+            0% {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Pseudo-classes para interatividade */
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(110%);
+            box-shadow: 0 4px 12px rgba(93, 92, 222, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+        }
+
+        /* Estilos específicos por ID */
+        #hero-section {
+            background: linear-gradient(135deg, rgba(93, 92, 222, 0.1) 0%, rgba(76, 175, 80, 0.1) 100%);
+        }
+
+        #mobile-menu {
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo para formulário aumentando acessibilidade */
+        .form-input:focus {
+            outline: 2px solid var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.2);
+        }
+
+        /* Media query para ajuste em telas muito pequenas */
+        @media (max-width: 320px) {
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            p {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-md dark:shadow-gray-800">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <svg class="h-8 w-8 text-secondary mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.8L18 8l-6 3-6-3 6-3.2zm-6 4.2l6 3v6.4l-6-3V9zm12 0v6.4l-6 3V12l6-3z"></path>
+                </svg>
+                <span class="text-xl font-bold text-primary">BioTech Verde</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#definicao" class="nav-link transition-all duration-300" tabindex="0">Definição</a>
+                <a href="#aplicacoes" class="nav-link transition-all duration-300" tabindex="0">Aplicações</a>
+                <a href="#conexao" class="nav-link transition-all duration-300" tabindex="0">Campo-Cidade</a>
+                <a href="#beneficios" class="nav-link transition-all duration-300" tabindex="0">Benefícios</a>
+                <a href="#contato" class="nav-link transition-all duration-300" tabindex="0">Contato</a>
+            </div>
+            <button id="mobileMenuBtn" class="md:hidden text-primary" aria-label="Menu de Navegação" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden container mx-auto px-4 pb-3">
+            <div class="flex flex-col space-y-3">
+                <a href="#definicao" class="nav-link transition-all duration-300">Definição</a>
+                <a href="#aplicacoes" class="nav-link transition-all duration-300">Aplicações</a>
+                <a href="#conexao" class="nav-link transition-all duration-300">Campo-Cidade</a>
+                <a href="#beneficios" class="nav-link transition-all duration-300">Benefícios</a>
+                <a href="#contato" class="nav-link transition-all duration-300">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero-section" class="relative py-16 md:py-24 overflow-hidden">
+        <div class="container mx-auto px-4 flex flex-col items-center text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-6 text-primary">Biotecnologia Verde</h1>
+            <h2 class="text-xl md:text-2xl mb-8">Conectando o Campo à Cidade através da Inovação</h2>
+            <p class="max-w-2xl text-base md:text-lg mb-8">
+                Descubra como a biotecnologia verde está revolucionando a agricultura sustentável 
+                e criando pontes entre os ambientes rurais e urbanos.
+            </p>
+            <a href="#definicao" class="btn-primary" tabindex="0">
+                Saiba Mais
+            </a>
+        </div>
+        
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden opacity-10">
+            <div class="absolute top-0 left-0 w-24 h-24 bg-green-500 rounded-full"></div>
+            <div class="absolute top-40 right-10 w-16 h-16 bg-primary rounded-full"></div>
+            <div class="absolute bottom-10 left-1/4 w-20 h-20 bg-green-300 rounded-full"></div>
+            <div class="absolute bottom-40 right-1/3 w-28 h-28 bg-blue-300 rounded-full"></div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Definition Section -->
+        <section id="definicao" class="mb-16 scroll-mt-20">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/2">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4 text-primary">O que é Biotecnologia Verde?</h2>
+                    <p class="mb-4">
+                        A biotecnologia verde refere-se à aplicação de técnicas biotecnológicas 
+                        na agricultura e produção de alimentos, com foco em soluções sustentáveis 
+                        que melhoram a produtividade enquanto reduzem o impacto ambiental.
+                    </p>
+                    <p>
+                        Diferente de outros ramos da biotecnologia, a vertente verde está intimamente 
+                        ligada ao desenvolvimento agrícola sustentável, utilizando o conhecimento científico 
+                        para melhorar cultivos, aumentar a resistência a pragas e doenças, e otimizar 
+                        o uso de recursos naturais.
+                    </p>
+                </div>
+                <div class="md:w-1/2 h-64 flex justify-center items-center bg-green-50 dark:bg-gray-800 rounded-lg overflow-hidden">
+                    <!-- Plant diagram SVG -->
+                    <svg class="w-full h-full max-w-md p-4" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" aria-label="Ilustração de uma planta com DNA">
+                        <g class="plant-animation">
+                            <!-- Roots -->
+                            <path d="M150 180 C140 190, 130 195, 120 190" stroke="#8B4513" fill="none" stroke-width="2" />
+                            <path d="M150 180 C160 190, 170 195, 180 190" stroke="#8B4513" fill="none" stroke-width="2" />
+                            <path d="M150 180 C145 190, 140 200, 135 195" stroke="#8B4513" fill="none" stroke-width="2" />
+                            <path d="M150 180 C155 190, 160 200, 165 195" stroke="#8B4513" fill="none" stroke-width="2" />
+                            
+                            <!-- Stem -->
+                            <line x1="150" y1="180" x2="150" y2="80" stroke="#4CAF50" stroke-width="3" />
+                            
+                            <!-- Leaves -->
+                            <path d="M150 150 C130 140, 110 145, 100 155" stroke="#4CAF50" fill="#A5D6A7" stroke-width="1" />
+                            <path d="M150 150 C170 140, 190 145, 200 155" stroke="#4CAF50" fill="#A5D6A7" stroke-width="1" />
+                            <path d="M150 120 C130 110, 115 115, 105 125" stroke="#4CAF50" fill="#A5D6A7" stroke-width="1" />
+                            <path d="M150 120 C170 110, 185 115, 195 125" stroke="#4CAF50" fill="#A5D6A7" stroke-width="1" />
+                            
+                            <!-- Flower -->
+                            <circle cx="150" cy="80" r="15" fill="#FFEB3B" />
+                            <circle cx="150" cy="80" r="8" fill="#FF9800" />
+                        </g>
+                        
+                        <!-- DNA helix around the plant -->
+                        <g class="fade-in">
+                            <path d="M120 160 Q150 140, 180 120 Q150 100, 120 80 Q150 60, 180 40" fill="none" stroke="#5D5CDE" stroke-width="1.5" stroke-dasharray="4" />
+                            <path d="M180 160 Q150 140, 120 120 Q150 100, 180 80 Q150 60, 120 40" fill="none" stroke="#5D5CDE" stroke-width="1.5" stroke-dasharray="4" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications Section -->
+        <section id="aplicacoes" class="mb-16 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">Aplicações Práticas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-2.207 2.207L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Melhoramento Genético</h3>
+                    <p>
+                        Desenvolvimento de variedades mais resistentes a pragas, doenças e 
+                        condições climáticas adversas, resultando em maior produtividade e 
+                        redução do uso de defensivos agrícolas.
+                    </p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zm4.211-10.724a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Biofertilizantes</h3>
+                    <p>
+                        Produção de fertilizantes biológicos a partir de microorganismos 
+                        e processos naturais, diminuindo a dependência de insumos químicos 
+                        e reduzindo a contaminação de solo e água.
+                    </p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707.707-.707A1 1 0 0116 3v3.586l.707.707a1 1 0 01-1.414 1.414L14 7.414l-1.293 1.293a1 1 0 11-1.414-1.414L12.586 6V3a1 1 0 011-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Biorremediação</h3>
+                    <p>
+                        Utilização de organismos vivos para limpar solos e águas contaminados, 
+                        recuperando áreas degradadas e possibilitando o retorno às atividades 
+                        agrícolas sustentáveis.
+                    </p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Bioenergia</h3>
+                    <p>
+                        Desenvolvimento de fontes de energia renovável a partir de biomassa 
+                        agrícola, como biocombustíveis e biogás, criando novas cadeias 
+                        produtivas sustentáveis no campo.
+                    </p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Alimentos Funcionais</h3>
+                    <p>
+                        Criação de alimentos com maior valor nutricional ou 
+                        benefícios específicos à saúde, como plantas biofortificadas 
+                        com vitaminas e minerais essenciais para a população urbana.
+                    </p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-indigo-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Agricultura de Precisão</h3>
+                    <p>
+                        Combinação de biotecnologia e tecnologia digital para monitoramento e 
+                        otimização de cultivos, permitindo uso mais eficiente de recursos e 
+                        redução de impactos ambientais.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rural-Urban Connection Section -->
+        <section id="conexao" class="mb-16 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">A Conexão Campo-Cidade</h2>
+            
+            <div class="relative mb-12 p-6 bg-green-50 dark:bg-gray-800 rounded-lg">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/2 md:pr-8 mb-6 md:mb-0">
+                        <h3 class="text-xl font-semibold mb-3">Fluxo de Inovação e Recursos</h3>
+                        <p class="mb-4">
+                            A biotecnologia verde estabelece um fluxo contínuo de inovação, recursos e benefícios 
+                            entre o campo e a cidade, criando um ecossistema integrado onde:
+                        </p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>O conhecimento científico desenvolvido em centros urbanos é aplicado no campo</li>
+                            <li>Os recursos naturais e alimentos produzidos no campo sustentam as cidades</li>
+                            <li>Novas tecnologias reduzem o impacto ambiental da produção agrícola</li>
+                            <li>Cadeias produtivas sustentáveis geram empregos tanto nas áreas rurais quanto urbanas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="md:w-1/2 h-64 flex justify-center items-center">
+                        <!-- Visual representation of rural-urban connection -->
+                        <svg class="w-full h-full max-w-md" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama de conexão entre campo e cidade">
+                            <!-- Rural Area -->
+                            <g class="fade-in" style="animation-delay: 0.3s">
+                                <rect x="20" y="100" width="140" height="80" rx="5" fill="#A5D6A7" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="90" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#1B5E20">CAMPO</text>
+                                
+                                <!-- Farm elements -->
+                                <rect x="40" y="150" width="20" height="20" fill="#8D6E63"/>
+                                <polygon points="30,150 50,130 70,150" fill="#4CAF50"/>
+                                
+                                <rect x="80" y="155" width="15" height="15" fill="#8D6E63"/>
+                                <polygon points="75,155 87.5,140 100,155" fill="#4CAF50"/>
+                                
+                                <!-- Crops -->
+                                <line x1="120" y1="160" x2="120" y2="150" stroke="#4CAF50" stroke-width="2"/>
+                                <circle cx="120" cy="150" r="3" fill="#FFEB3B"/>
+                                
+                                <line x1="130" y1="160" x2="130" y2="150" stroke="#4CAF50" stroke-width="2"/>
+                                <circle cx="130" cy="150" r="3" fill="#FFEB3B"/>
+                                
+                                <line x1="140" y1="160" x2="140" y2="150" stroke="#4CAF50" stroke-width="2"/>
+                                <circle cx="140" cy="150" r="3" fill="#FFEB3B"/>
+                            </g>
+                            
+                            <!-- Urban Area -->
+                            <g class="fade-in" style="animation-delay: 0.6s">
+                                <rect x="240" y="100" width="140" height="80" rx="5" fill="#BBDEFB" stroke="#2196F3" stroke-width="2"/>
+                                <text x="310" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D47A1">CIDADE</text>
+                                
+                                <!-- Buildings -->
+                                <rect x="260" y="145" width="20" height="25" fill="#455A64"/>
+                                <rect x="265" y="155" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="265" y="145" width="5" height="5" fill="#FFECB3"/>
+                                
+                                <rect x="290" y="135" width="25" height="35" fill="#455A64"/>
+                                <rect x="295" y="140" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="295" y="150" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="305" y="140" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="305" y="150" width="5" height="5" fill="#FFECB3"/>
+                                
+                                <rect x="325" y="130" width="15" height="40" fill="#455A64"/>
+                                <rect x="330" y="135" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="330" y="145" width="5" height="5" fill="#FFECB3"/>
+                                <rect x="330" y="155" width="5" height="5" fill="#FFECB3"/>
+                                
+                                <!-- Laboratory -->
+                                <rect x="350" y="145" width="20" height="25" fill="#B39DDB"/>
+                                <rect x="355" y="150" width="10" height="10" fill="#EDE7F6"/>
+                                <rect x="358" y="140" width="4" height="5" fill="#7E57C2"/>
+                            </g>
+                            
+                            <!-- Connection Arrows -->
+                            <g class="fade-in" style="animation-delay: 0.9s">
+                                <!-- Technology transfer (city to rural) -->
+                                <path d="M240 120 C210 120, 190 80, 160 80" fill="none" stroke="#5D5CDE" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <text x="200" y="70" text-anchor="middle" font-size="10" fill="#5D5CDE">Tecnologia &amp; Pesquisa</text>
+                                
+                                <!-- Food and resources (rural to city) -->
+                                <path d="M160 140 C190 140, 210 180, 240 180" fill="none" stroke="#4CAF50" stroke-width="3" marker-end="url(#arrowhead-green)"/>
+                                <text x="200" y="195" text-anchor="middle" font-size="10" fill="#4CAF50">Alimentos &amp; Recursos</text>
+                            </g>
+                            
+                            <!-- Arrowhead markers -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#5D5CDE"/>
+                                </marker>
+                                <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#4CAF50"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Benefícios para o Campo</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-secondary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Aumento da produtividade e eficiência dos cultivos</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-secondary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Diversificação de culturas e fontes de renda</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-secondary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Redução da necessidade de expansão agrícola para novas áreas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-secondary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Adoção de práticas mais sustentáveis de manejo</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-secondary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Acesso a mercados urbanos de maior valor agregado</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">Benefícios para a Cidade</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Maior segurança alimentar e acesso a alimentos de qualidade</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Redução do impacto ambiental da produção agrícola</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Desenvolvimento de novos produtos e soluções biotecnológicas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Criação de empregos qualificados em pesquisa e desenvolvimento</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Acesso a bioenergia e produtos sustentáveis</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="beneficios" class="mb-16 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">Impactos Positivos da Biotecnologia Verde</h2>
+            
+            <div class="overflow-hidden bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">Sustentabilidade Ambiental</div>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        A biotecnologia verde contribui significativamente para a redução do impacto ambiental 
+                        da agricultura, preservando recursos naturais e biodiversidade.
+                    </p>
+                </div>
+                <div class="px-6 pt-2 pb-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-block bg-green-100 dark:bg-green-900 rounded-full px-3 py-1 text-sm font-semibold text-green-800 dark:text-green-100">Redução de agroquímicos</span>
+                        <span class="inline-block bg-green-100 dark:bg-green-900 rounded-full px-3 py-1 text-sm font-semibold text-green-800 dark:text-green-100">Menor consumo de água</span>
+                        <span class="inline-block bg-green-100 dark:bg-green-900 rounded-full px-3 py-1 text-sm font-semibold text-green-800 dark:text-green-100">Conservação do solo</span>
+                        <span class="inline-block bg-green-100 dark:bg-green-900 rounded-full px-3 py-1 text-sm font-semibold text-green-800 dark:text-green-100">Menor emissão de gases</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-hidden bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">Desenvolvimento Econômico</div>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        O desenvolvimento de novos produtos, processos e cadeias produtivas baseados em 
+                        biotecnologia verde gera oportunidades econômicas tanto no campo quanto na cidade.
+                    </p>
+                </div>
+                <div class="px-6 pt-2 pb-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-block bg-blue-100 dark:bg-blue-900 rounded-full px-3 py-1 text-sm font-semibold text-blue-800 dark:text-blue-100">Novas oportunidades de negócio</span>
+                        <span class="inline-block bg-blue-100 dark:bg-blue-900 rounded-full px-3 py-1 text-sm font-semibold text-blue-800 dark:text-blue-100">Valorização da produção rural</span>
+                        <span class="inline-block bg-blue-100 dark:bg-blue-900 rounded-full px-3 py-1 text-sm font-semibold text-blue-800 dark:text-blue-100">Competitividade internacional</span>
+                        <span class="inline-block bg-blue-100 dark:bg-blue-900 rounded-full px-3 py-1 text-sm font-semibold text-blue-800 dark:text-blue-100">Empregos qualificados</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-hidden bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">Segurança Alimentar</div>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        O aumento da produtividade, resiliência das culturas e qualidade nutricional dos alimentos 
+                        contribui para a segurança alimentar global, especialmente em regiões urbanas densamente povoadas.
+                    </p>
+                </div>
+                <div class="px-6 pt-2 pb-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-block bg-purple-100 dark:bg-purple-900 rounded-full px-3 py-1 text-sm font-semibold text-purple-800 dark:text-purple-100">Maior disponibilidade de alimentos</span>
+                        <span class="inline-block bg-purple-100 dark:bg-purple-900 rounded-full px-3 py-1 text-sm font-semibold text-purple-800 dark:text-purple-100">Alimentos mais nutritivos</span>
+                        <span class="inline-block bg-purple-100 dark:bg-purple-900 rounded-full px-3 py-1 text-sm font-semibold text-purple-800 dark:text-purple-100">Redução de perdas pós-colheita</span>
+                        <span class="inline-block bg-purple-100 dark:bg-purple-900 rounded-full px-3 py-1 text-sm font-semibold text-purple-800 dark:text-purple-100">Adaptação às mudanças climáticas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section with Form -->
+        <section id="contato" class="mb-16 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">Entre em Contato</h2>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <p class="mb-6">
+                    Tem interesse em saber mais sobre biotecnologia verde ou deseja colaborar em projetos nesta área? 
+                    Preencha o formulário abaixo e entraremos em contato.
+                </p>
+                
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="nome" class="block text-sm font-medium mb-1">Nome</label>
+                            <input 
+                                type="text" 
+                                id="nome" 
+                                name="nome" 
+                                class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-base form-input"
+                                placeholder="Seu nome completo"
+                                tabindex="0"
+                                required
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium mb-1">E-mail</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-base form-input"
+                                placeholder="seu@email.com"
+                                tabindex="0"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="assunto" class="block text-sm font-medium mb-1">Assunto</label>
+                        <select 
+                            id="assunto" 
+                            name="assunto" 
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-base form-input"
+                            tabindex="0"
+                        >
+                            <option value="info">Quero mais informações</option>
+                            <option value="parceria">Proposta de parceria</option>
+                            <option value="pesquisa">Projeto de pesquisa</option>
+                            <option value="outro">Outro assunto</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="mensagem" class="block text-sm font-medium mb-1">Mensagem</label>
+                        <textarea 
+                            id="mensagem" 
+                            name="mensagem" 
+                            rows="4" 
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-base form-input"
+                            placeholder="Descreva sua solicitação, dúvida ou proposta..."
+                            tabindex="0"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input 
+                            type="checkbox" 
+                            id="newsletter" 
+                            name="newsletter" 
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                            tabindex="0"
+                        >
+                        <label for="newsletter" class="ml-2 block text-sm">
+                            Desejo receber atualizações sobre biotecnologia verde por e-mail
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <button 
+                            type="submit" 
+                            class="btn-primary inline-flex items-center"
+                            tabindex="0"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Enviar Mensagem
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center">
+                        <svg class="h-8 w-8 text-secondary mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.8L18 8l-6 3-6-3 6-3.2zm-6 4.2l6 3v6.4l-6-3V9zm12 0v6.4l-6 3V12l6-3z"></path>
+                        </svg>
+                        <span class="text-xl font-bold text-primary">BioTech Verde</span>
+                    </div>
+                    <p class="mt-2 text-sm">Conectando o campo à cidade através da inovação biotecnológica</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-3">
+                    <a href="#definicao" class="px-4 py-2 rounded-lg bg-primary bg-opacity-10 hover:bg-opacity-20 text-primary transition-colors duration-300 nav-link">Definição</a>
+                    <a href="#aplicacoes" class="px-4 py-2 rounded-lg bg-primary bg-opacity-10 hover:bg-opacity-20 text-primary transition-colors duration-300 nav-link">Aplicações</a>
+                    <a href="#conexao" class="px-4 py-2 rounded-lg bg-primary bg-opacity-10 hover:bg-opacity-20 text-primary transition-colors duration-300 nav-link">Campo-Cidade</a>
+                    <a href="#contato" class="px-4 py-2 rounded-lg bg-primary bg-opacity-10 hover:bg-opacity-20 text-primary transition-colors duration-300 nav-link">Contato</a>
+                </div>
+            </div>
+            
+            <!-- Accessibility controls -->
+            <div class="mt-8 flex justify-center">
+                <button id="increaseFontBtn" class="mx-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Aumentar tamanho do texto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </button>
+                <button id="decreaseFontBtn" class="mx-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Diminuir tamanho do texto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+                    </svg>
+                </button>
+                <button id="toggleContrastBtn" class="mx-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar alto contraste">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-500 dark:text-gray-400">
+                © 2023 BioTech Verde. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const expanded = mobileMenu.classList.contains('hidden') ? 'false' : 'true';
+            mobileMenuBtn.setAttribute('aria-expanded', expanded);
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Accessibility features
+        
+        // Font size adjustment
+        const increaseFontBtn = document.getElementById('increaseFontBtn');
+        const decreaseFontBtn = document.getElementById('decreaseFontBtn');
+        
+        // Current font size multiplier (starts at 1 = 100%)
+        let fontSizeMultiplier = 1;
+        
+        increaseFontBtn.addEventListener('click', () => {
+            if (fontSizeMultiplier < 1.5) { // Max 150%
+                fontSizeMultiplier += 0.1;
+                updateFontSize();
+            }
+        });
+        
+        decreaseFontBtn.addEventListener('click', () => {
+            if (fontSizeMultiplier > 0.8) { // Min 80%
+                fontSizeMultiplier -= 0.1;
+                updateFontSize();
+            }
+        });
+        
+        function updateFontSize() {
+            document.body.style.fontSize = `${fontSizeMultiplier}rem`;
+        }
+        
+        // High contrast mode
+        const toggleContrastBtn = document.getElementById('toggleContrastBtn');
+        let highContrastMode = false;
+        
+        toggleContrastBtn.addEventListener('click', () => {
+            highContrastMode = !highContrastMode;
+            
+            if (highContrastMode) {
+                document.documentElement.classList.add('high-contrast');
+                document.documentElement.style.setProperty('--primary-color', '#0000FF');
+                document.documentElement.style.setProperty('--secondary-color', '#008000');
+                document.documentElement.style.setProperty('--text-color-light', '#000000');
+                document.documentElement.style.setProperty('--text-color-dark', '#FFFFFF');
+                document.documentElement.style.setProperty('--bg-color-light', '#FFFFFF');
+                document.documentElement.style.setProperty('--bg-color-dark', '#000000');
+            } else {
+                document.documentElement.classList.remove('high-contrast');
+                document.documentElement.style.setProperty('--primary-color', '#5D5CDE');
+                document.documentElement.style.setProperty('--secondary-color', '#4CAF50');
+                document.documentElement.style.setProperty('--text-color-light', '#333333');
+                document.documentElement.style.setProperty('--text-color-dark', '#f0f0f0');
+                document.documentElement.style.setProperty('--bg-color-light', '#ffffff');
+                document.documentElement.style.setProperty('--bg-color-dark', '#181818');
+            }
+        });
+    </script>
+</body>
+</html>
